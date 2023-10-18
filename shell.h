@@ -14,7 +14,7 @@ extern char **environ;
 /* Function Prototypes */
 
 /* main.c */
-int main(void);
+int main(int argc, char **argv, char **env);
 
 /* execute.c */
 void execute_command(char **args);
@@ -23,11 +23,13 @@ void execute_command(char **args);
 char **tokenize(char *line);
 char *find_in_PATH(char *cmd);
 
+
 /* builtins.c */
 void execute_builtin(char **args);
 void print_env(void);
-void exit_shell(void);
 int is_builtin(char *cmd);
+extern char **environ;
+void exit_shell (int status);
 
 /* input.c */
 void display_prompt(void);

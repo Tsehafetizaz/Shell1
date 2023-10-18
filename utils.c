@@ -14,6 +14,13 @@ char **tokenize(char *line)
 	int token_count = 0;
 	char *token = strtok(line, " ");
 
+tokens = malloc(sizeof(char *) * (token_count + 2));
+if (!tokens)
+{
+perror("Error allocating memory for tokens");
+exit(EXIT_FAILURE);
+}
+
 	while (token != NULL)
 	{
 		tokens[token_count] = token;
@@ -49,5 +56,19 @@ char *find_in_PATH(char *cmd)
 	}
 	free(cmd_path);
 	return (NULL);
+}
+
+/**
+ * exit_shell - exits the shell with a given status.
+ *
+ * This function is used to cleanly exit the shell program with a specified
+ * exit status - It wraps the standard `exit` function to provide a more
+ * descriptive function name in the context of the shell program.
+ *
+ * status - the exit status to terminate the shell with.
+ */
+void exit_shell(int status)
+{
+	exit(status);
 }
 

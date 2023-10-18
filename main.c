@@ -1,32 +1,40 @@
 #include "shell.h"
 
 /**
- * main - Entry point of the shell program.
+ * main - The main loop of the shell.
+ * @argc: Argument count.
+ * @argv: Argument vector.
+ * @env: Environment variables.
  *
- * Description: This is the main loop of the shell.
- *
- * Return: 0 on success.
+ * Return: Always 0 (success).
  */
-int main(void)
+int main(int argc, char **argv, char **env)
 {
-char *line;
-char **args;
+	char *line = NULL;
+	char **args;
+	size_t len = 0;
+	ssize_t read;
+	(void)argc;
+	(void)argv;
+	(void)env;
 
-while (1)
-{
-display_prompt();
-line = getline_custom();
-args = tokenize(line);
-if (is_builtin(args[0]))
-{
-execute_builtin(args);
-}
-else
-{
-execute_command(args);
-}
-free(line);
-free(args);
-}
-return (0);
+	while (1)
+	{
+		printf("$ ");
+		read = getline(&line, &len, stdin);
+		if (read == -1)
+		{
+			free(line);
+			exit(0);
+		}
+
+		args = tokenize(line);
+		execute_command(args);
+
+		free(line);
+		line = NULL;
+		free(args);
+	}
+
+	return (0);
 }

@@ -27,7 +27,7 @@ char *getline_custom(void)
 	if (read == -1)
 	{
 		free(line);
-		exit_shell();
+		exit_shell(0);
 	}
 	return (line);
 }
