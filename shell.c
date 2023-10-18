@@ -11,7 +11,7 @@ int main(void)
 
 	while (1)
 	{
-		printf("$ ");
+		printf(": ) ");
 		line = read_line();
 		args = split_line(line);
 		execute_command(args);
