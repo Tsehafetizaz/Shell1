@@ -1,5 +1,5 @@
-#ifndef SHELL_H
-#define SHELL_H
+#ifndef SIMPLE_SHELL_H
+#define SIMPLE_SHELL_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,9 +7,11 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/stat.h>
 
-/* Function to execute a given command */
-void execute_command(char *line);
+/* Function prototypes */
+char *read_line(void);
+char **split_line(char *line);
+char *search_in_PATH(char *cmd);
+void execute_command(char **args);
 
-#endif /* SHELL_H */
+#endif /* SIMPLE_SHELL_H */
