@@ -1,32 +1,42 @@
 #include "shell.h"
-
-/**
- * execute_command - Executes a command.
- * @args: The arguments for the command.
+/* 
+ * Executes a given command.
+ * 
+ * This function forks a child process to execute the command while the parent waits.
+ * If the command is not found, it prints an error message.
+ *
+ * Parameters:
+ *   - line: The command to be executed.
  */
-void execute_command(char **args)
+void execute_command(char *line)
 {
-	pid_t pid;
+	pid_t child_pid;
 	int status;
+	char *argv[2];
 
-	pid = fork();
-	if (pid == 0)
+	line[strlen(line) - 1] = '\0';  /* Remove newline */
+	argv[0] = line;
+	argv[1] = NULL;
+
+	/* Try to execute the command directly */
+	child_pid = fork();
+	if (child_pid == -1)
 	{
-		/* Child process */
-		if (execvp(args[0], args) == -1)
-			perror("Error");
-		exit(EXIT_FAILURE);
+		perror("Error:");
+		return;
 	}
-	else if (pid < 0)
+	if (child_pid == 0)
 	{
-		/* Error forking */
-		perror("Error");
+		if (execvp(argv[0], argv) == -1)  /* Execute command */
+			perror("Error:");
+		exit(EXIT_FAILURE);  /* Exit child process if execvp fails */
 	}
 	else
 	{
-		/* Parent process*/
-		do {
-			waitpid(pid, &status, WUNTRACED);
-		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+		wait(&status);
+		if (WEXITSTATUS(status) == 127)
+		{
+			printf("%s: command not found\n", line);
+		}
 	}
 }
