@@ -19,7 +19,6 @@ char **args;
 		{
 			execute_command(args);
 		}
-		free(input);
 		free_args(args);
 	}
 	return (0);
