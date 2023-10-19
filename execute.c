@@ -8,6 +8,7 @@ int execute_command(char **args)
 {
 	pid_t pid;
 	int status = 0;
+
 	pid = fork();
 
 	if (pid == 0)
