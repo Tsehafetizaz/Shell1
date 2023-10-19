@@ -4,37 +4,23 @@
  * main - Main function for the shell.
  * Return: 0 (Success), or exit status of child process.
  */
+
 int main(void)
 {
-	char *line = NULL;
-	size_t len = 0;
-	ssize_t nread;
+	char *input;
+char **args;
 
 	while (1)
 	{
-		write(STDOUT_FILENO, "#cisfun$ ", 9);
-
-		nread = getline(&line, &len, stdin);
-
-		/* Handle end of file or error */
-		if (nread == -1)
+		printf("($) ");
+		input = my_getline();
+		args = parse_input(input);
+		if (check_builtin(args) == 0)
 		{
-			free(line);
-			if (feof(stdin))
-			{
-				write(STDOUT_FILENO, "\n", 1);
-				exit(EXIT_SUCCESS);
-			}
-			perror("./hsh");
-			exit(EXIT_FAILURE);
+			execute_command(args);
 		}
-
-		/* Remove the newline character */
-		line[nread - 1] = '\0';
-
-		exec_command(line);
+		free(input);
+		free_args(args);
 	}
-
-	free(line);
-	return (EXIT_SUCCESS);
+	return (0);
 }
