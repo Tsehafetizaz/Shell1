@@ -1,27 +1,40 @@
 #include "shell.h"
 
 /**
- * main - Entry point of our shell.
- * Return: Always 0.
+ * main - Main function for the shell.
+ * Return: 0 (Success), or exit status of child process.
  */
 int main(void)
 {
-	char *line;
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t nread;
 
 	while (1)
 	{
-		printf(PROMPT);
-		line = get_input();
+		write(STDOUT_FILENO, "#cisfun$ ", 9);
 
-		/* Handling EOF (Ctrl+D) */
-		if (!line)
+		nread = getline(&line, &len, stdin);
+
+		/* Handle end of file or error */
+		if (nread == -1)
 		{
-			printf("\n");
-			exit(0);
+			free(line);
+			if (feof(stdin))
+			{
+				write(STDOUT_FILENO, "\n", 1);
+				exit(EXIT_SUCCESS);
+			}
+			perror("./hsh");
+			exit(EXIT_FAILURE);
 		}
 
+		/* Remove the newline character */
+		line[nread - 1] = '\0';
+
 		exec_command(line);
-		free(line);
 	}
-	return (0);
+
+	free(line);
+	return (EXIT_SUCCESS);
 }
