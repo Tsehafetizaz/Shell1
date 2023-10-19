@@ -2,16 +2,24 @@
 
 /**
  * exec_command - Execute a command.
- * @command: The command to execute.
+ * @command: The command string.
  */
 void exec_command(char *command)
 {
-	char *argv[2];
+	char *argv[BUFSIZE];
+	char *token;
+	int i = 0;
 	pid_t child_pid;
 	int child_status;
 
-	argv[0] = command;
-	argv[1] = NULL;
+	token = strtok(command, " ");
+	while (token != NULL)
+	{
+		argv[i] = token;
+		i++;
+		token = strtok(NULL, " ");
+	}
+	argv[i] = NULL;
 
 	/* Create a new process */
 	child_pid = fork();
@@ -37,4 +45,3 @@ void exec_command(char *command)
 		wait(&child_status);
 	}
 }
-
