@@ -1,5 +1,5 @@
-#ifndef SIMPLE_SHELL_H
-#define SIMPLE_SHELL_H
+#ifndef SHELL_H
+#define SHELL_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,10 +8,11 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-/* Function prototypes */
-char *read_line(void);
-char **split_line(char *line);
-char *search_in_PATH(char *cmd);
-void execute_command(char **args);
+#define PROMPT "#cisfun$ "
+#define BUFSIZE 1024
 
-#endif /* SIMPLE_SHELL_H */
+/* Function Prototypes */
+char *get_input(void);
+void exec_command(char *command);
+
+#endif /* SHELL_H */
