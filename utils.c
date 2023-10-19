@@ -1,6 +1,6 @@
 #include "shell.h"
 /*
- * parse_input - the input string into an array of arguments.
+ * parse_input: - the input string into an array of arguments.
  * param input: The string input from the user.
  * @return: A pointer to an array of strings where each string is an argument.
  */
