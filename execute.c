@@ -27,37 +27,46 @@ char *full_path = malloc(512);
 	return (NULL);
 }
 /**
- * execute_command - Executes a command
- * @args: Array of arguments
+ * execute_command - Executes the provided command.
+ * @args: Null-terminated list of arguments.
+ *        args[0] should be the command.
+ *
+ * Return: 1 on success, -1 on failure.
  */
 void execute_command(char **args)
 {
 	pid_t pid;
-	int status;
-pid = fork();
+int status;
 
-if (pid == 0)
+	if (args[0] == NULL)
 	{
-char *cmd_path = search_in_PATH(args[0]);
-
-		if (cmd_path)
+		/* An empty command was entered. */
+		return;
+	}
+	if (is_builtin(args[0]))
+	{
+		execute_builtin(args);
+		return;
+	}
+	pid = fork();
+	if (pid == 0)
+	{
+		/* Child process */
+		if (execvp(args[0], args) == -1)
 		{
-			execve(cmd_path, args, NULL);
-			free(cmd_path);
+			perror("shell");
 		}
-		else
-		{
-			perror(args[0]);
-			exit(EXIT_FAILURE);
-		}
+		exit(EXIT_FAILURE);
 	}
 	else if (pid < 0)
 	{
-		perror("Error");
+		/* Error forking */
+		perror("shell");
 	}
 	else
 	{
-		do {
+		/* Parent process */
+		do	{
 			waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 	}

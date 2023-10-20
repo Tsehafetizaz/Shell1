@@ -13,5 +13,8 @@ char *read_line(void);
 char **split_line(char *line);
 char *search_in_PATH(char *cmd);
 void execute_command(char **args);
+int is_builtin(char *command);
+void execute_builtin(char **args);
+extern char **environ;
 
 #endif /* SIMPLE_SHELL_H */
