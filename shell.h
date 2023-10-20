@@ -1,5 +1,5 @@
-#ifndef SHELL_H
-#define SHELL_H
+#ifndef SIMPLE_SHELL_H
+#define SIMPLE_SHELL_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,12 +9,9 @@
 #include <sys/wait.h>
 
 /* Function prototypes */
-char **parse_input(char *input);
-int execute_command(char **args);
-int check_builtin(char **args);
-void free_args(char **args);
-char *get_path(char *command);
-char *my_getline(void);
-extern char **environ;
+char *read_line(void);
+char **split_line(char *line);
+char *search_in_PATH(char *cmd);
+void execute_command(char **args);
 
-#endif /* SHELL_H */
+#endif /* SIMPLE_SHELL_H */
