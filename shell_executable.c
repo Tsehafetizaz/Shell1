@@ -9,7 +9,7 @@ char *search_in_PATH(char *cmd)
 {
 	char *PATH = getenv("PATH");
 	char *dir = strtok(PATH, ":");
-char *full_path = malloc(512);
+	char *full_path = malloc(512);
 
 	if (!full_path)
 	{
@@ -29,14 +29,13 @@ char *full_path = malloc(512);
 /**
  * execute_command - Executes the provided command.
  * @args: Null-terminated list of arguments.
- *        args[0] should be the command.
- *
+ * args[0] should be the command.
  * Return: 1 on success, -1 on failure.
  */
 void execute_command(char **args)
 {
 	pid_t pid;
-int status;
+	int status;
 
 	if (args[0] == NULL)
 	{

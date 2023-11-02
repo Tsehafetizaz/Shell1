@@ -1,0 +1,67 @@
+#!/usr/bin/expect
+
+# Ensure required files are present
+
+set timeout 1
+set project_folder "."
+
+# Check for required files
+foreach file {"README.md" "AUTHORS" "simple_shell"} {
+if {![file exists $project_folder/$file]} {
+puts "FAIL: $file not found"
+} else {
+puts "PASS: $file found"
+}
+}
+
+# Set the path to Betty's scripts
+set betty_style_script "./betty-style.pl"
+set betty_doc_script "./betty-doc.pl"
+
+# Check Betty style and other requirements for .c files
+foreach file {"input.c" "main.c" "shell_executable.c" "builtins.c"} {
+set file_path "$project_folder/$file"
+
+# Betty style check
+if {![file exists $betty_style_script]} {
+puts "FAIL: Betty style script not found"
+} else {
+exec $betty_style_script $file_path
+}
+
+# Betty documentation check
+if {![file exists $betty_doc_script]} {
+puts "FAIL: Betty doc script not found"
+} else {
+exec $betty_doc_script $file_path
+}
+
+# Additional checks
+set file_content [read [open $file_path]]
+if {[string match "*\#/bin/bash*" $file_content]} {
+puts "FAIL: Direct PATH usage found in $file"
+}
+foreach char {"\"" "\\" "*" "&" "#"} {
+if {[string match "*$char*" $file_content]} {
+puts "FAIL: Special character $char found in $file, ensure proper handling"
+}
+}
+}
+
+# Check include guards for .h file
+set header_file "$project_folder/shell.h"
+set header_content [read [open $header_file]]
+if {![string match "*#ifndef*" $header_content] || ![string match "*#define*" $header_content] || ![string match "*#endif*" $header_content]} {
+puts "FAIL: Include guards not found in shell.h"
+} else {
+puts "PASS: Include guards found in shell.h"
+}
+
+# Run runtime tests
+set runtime_test_script "$project_folder/expect_tests/checker1.expect"
+if {![file exists $runtime_test_script]} {
+puts "FAIL: Runtime test script not found"
+} else {
+catch {exec $runtime_test_script $project_folder} result
+puts $result
+}
