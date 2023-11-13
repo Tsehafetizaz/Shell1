@@ -1,0 +1,18 @@
+PASS: README.md found
+PASS: AUTHORS found
+PASS: simple_shell found
+FAIL: Special character " found in input.c, ensure proper handling
+FAIL: Special character * found in input.c, ensure proper handling
+FAIL: Special character & found in input.c, ensure proper handling
+FAIL: Special character # found in input.c, ensure proper handling
+FAIL: Special character " found in main.c, ensure proper handling
+FAIL: Special character * found in main.c, ensure proper handling
+FAIL: Special character # found in main.c, ensure proper handling
+FAIL: Special character " found in shell_executable.c, ensure proper handling
+FAIL: Special character * found in shell_executable.c, ensure proper handling
+FAIL: Special character & found in shell_executable.c, ensure proper handling
+FAIL: Special character # found in shell_executable.c, ensure proper handling
+FAIL: Special character " found in builtins.c, ensure proper handling
+FAIL: Special character * found in builtins.c, ensure proper handling
+FAIL: Special character # found in builtins.c, ensure proper handling
+PASS: Include guards found in shell.h
