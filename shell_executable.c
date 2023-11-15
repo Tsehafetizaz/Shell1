@@ -1,31 +1,5 @@
 #include "shell.h"
-/**
- * search_in_PATH - Searches for a command in the PATH
- * @cmd: The command to search for
- *
- * Return: Full path to the command, or NULL if not found
- */
-char *search_in_PATH(char *cmd)
-{
-	char *PATH = getenv("PATH");
-	char *dir = strtok(PATH, ":");
-	char *full_path = malloc(512);
 
-	if (!full_path)
-	{
-		perror("Allocation error");
-		exit(EXIT_FAILURE);
-	}
-	while (dir != NULL)
-	{
-		sprintf(full_path, "%s/%s", dir, cmd);
-		if (access(full_path, F_OK) == 0)
-			return (full_path);
-		dir = strtok(NULL, ":");
-	}
-	free(full_path);
-	return (NULL);
-}
 /**
  * execute_command - Executes the provided command.
  * @args: Null-terminated list of arguments.
@@ -36,10 +10,10 @@ void execute_command(char **args)
 {
 	pid_t pid;
 	int status;
+	char *path_command = NULL;
 
 	if (args[0] == NULL)
 	{
-		/* An empty command was entered. */
 		return;
 	}
 	if (is_builtin(args[0]))
@@ -47,10 +21,19 @@ void execute_command(char **args)
 		execute_builtin(args);
 		return;
 	}
+	if (args[0][0] != '/')
+	{
+		path_command = search_in_PATH(args[0]);
+		if (path_command == NULL)
+		{
+			fprintf(stderr, "%s: No such file or directory\n", args[0]);
+			return;
+		}
+		args[0] = path_command;
+	}
 	pid = fork();
 	if (pid == 0)
 	{
-		/* Child process */
 		if (execvp(args[0], args) == -1)
 		{
 			perror("shell");
@@ -59,14 +42,16 @@ void execute_command(char **args)
 	}
 	else if (pid < 0)
 	{
-		/* Error forking */
 		perror("shell");
 	}
 	else
 	{
-		/* Parent process */
-		do	{
+		do {
 			waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	}
+	if (path_command)
+	{
+		free(path_command);
 	}
 }

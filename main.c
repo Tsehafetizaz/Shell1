@@ -10,11 +10,22 @@ int main(void)
 	char *line;
 	char **args;
 
-	printf(": ) ");
-	line = read_line();
-	args = split_line(line);
-	execute_command(args);
-	free(line);
-	free(args);
+	while (1)
+	{
+		printf(": ) ");
+		line = read_line();
+		if (!line || feof(stdin))
+		{
+			if (line)
+			{
+				free(line);
+			}
+			break;
+		}
+		args = split_line(line);
+		execute_command(args);
+		free(line);
+		free(args);
+	}
 	return (0);
 }
